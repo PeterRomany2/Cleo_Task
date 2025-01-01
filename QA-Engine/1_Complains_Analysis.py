@@ -5,7 +5,14 @@ import plotly.express as px
 
 # Streamlit page configuration
 st.set_page_config(page_title="Complaints Analysis", layout="wide",theme="dark")
-
+st.markdown("""
+    <style>
+        .stApp {
+            background-color: #2c2f3e;
+            color: white;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 @st.cache_data
 def load_escalation():
