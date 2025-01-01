@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 
 # Streamlit page configuration
-st.set_page_config(page_title="Complaints Analysis", layout="wide")
+st.set_page_config(page_title="Complaints Analysis", layout="wide", initial_sidebar_state="collapsed")
 
 
 @st.cache_data
