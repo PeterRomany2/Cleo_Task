@@ -42,7 +42,7 @@ def chat(message):
     user_message = [{
         'role': 'user',
         'content': fr"""
-        use: df = pd.read_excel('C:\Users\beter\PycharmProjects\QA-Engine\Peter Assessment.xlsx', sheet_name='Escalation Sheet')
+        use: df = pd.read_excel('Peter Assessment.xlsx', sheet_name='Escalation Sheet')
 and use: column names of this df:['Timestamp', 'Email Address', 'The Brand name', 'Complaint Type',
        'Gift/Exchange order number', 'Priorty', 'Channel', 'OLD Order Number',
        'Total Order Amount', 'Attach file', 'Comment about case',
