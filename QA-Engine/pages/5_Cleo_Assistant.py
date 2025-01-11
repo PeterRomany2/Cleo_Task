@@ -23,7 +23,7 @@ os.environ["GROQ_API_KEY"] = GROQ_API_KEY
 client = Groq()
 
 # Set up model name
-model = 'llama-3.2-90b-vision-preview'  # Update to your model of choice
+model = 'llama-3.3-70b-specdec'  # Update to your model of choice
 
 # Embed Lottie animation in Streamlit with top-left positioning using inline CSS
 lottie_html = """
