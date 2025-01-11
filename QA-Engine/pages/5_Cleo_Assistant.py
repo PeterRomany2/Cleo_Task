@@ -43,6 +43,11 @@ def chat(message):
         'role': 'user',
         'content': fr"""
         use: df = pd.read_excel('Peter Assessment.xlsx', sheet_name='Escalation Sheet')
+             df.drop(df[df['Total Order Amount'].isnull()].index,inplace=True)
+             df.drop(df[df['Total Order Amount']=="visa"].index,inplace=True)
+             mismatch_features = ['Total Order Amount']
+             df[mismatch_features] = df[mismatch_features].astype(int)
+             
 and use: column names of this df:['Timestamp', 'Email Address', 'The Brand name', 'Complaint Type',
        'Gift/Exchange order number', 'Priorty', 'Channel', 'OLD Order Number',
        'Total Order Amount', 'Attach file', 'Comment about case',
