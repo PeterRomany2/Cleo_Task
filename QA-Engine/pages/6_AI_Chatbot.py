@@ -9,6 +9,10 @@ st.set_page_config(
     layout="centered"
 )
 
+if "logged_in" not in st.session_state or not st.session_state.logged_in:
+    st.warning("You need to log in to access this page.")
+    st.stop()  # Stop further execution of the page
+    
 # Embed Lottie animation in Streamlit with top-right positioning
 lottie_html = """
 <div style="text-align: center; margin-bottom: 20px;">
