@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
-
+import streamlit.components.v1 as components
 # Streamlit page configuration
 st.set_page_config(page_title="Complaints Analysis", layout="wide")
 
@@ -441,6 +441,20 @@ summary = """
 4. **Recommendation:** Increase resources or staffing during peak periods to handle ~40 complaints/day to prevent SLA breaches and backlog accumulation.
 """
 st.markdown(summary)
+
+
+# Embed the iframe
+iframe_code = """
+<iframe allowfullscreen="allowfullscreen" scrolling="no" class="fp-iframe" 
+        src="https://heyzine.com/flip-book/5b757b15cc.html" 
+        style="border: 1px solid lightgray;  width: 100%; height: 400px;">
+</iframe>
+
+"""
+
+
+# Display the iframe in the app
+components.html(iframe_code, height=450)
 
 st.write('---')
 
