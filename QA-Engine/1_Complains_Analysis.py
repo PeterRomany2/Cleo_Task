@@ -348,6 +348,99 @@ fig.update_layout(
 # Display the chart
 st.plotly_chart(fig, use_container_width=True)
 
+df['Date'] = df['Timestamp'].dt.normalize()  # Normalize to date only
+
+# Function to determine if complaints are within SLA
+def is_within_sla(row):
+    brand = row['The Brand name']
+    sla = brand_sla.get(brand, 0)  # Get SLA for the brand, default to 0 if not found
+    return row['Resolution Time (Days)'] <= sla
+
+# Add a column to indicate whether complaints are within SLA
+df['Within SLA'] = df.apply(is_within_sla, axis=1)
+
+# Filter complaints resolved within SLA and significant outliers
+resolved_within_sla = df[df['Within SLA']]
+significant_outliers = df[(~df['Within SLA']) & (df['Resolution Time (Days)'] > df['Resolution Time (Days)'].mean())]
+
+# Pre-defined Efficiency Table
+efficiency_data = {
+    "Date": [
+        "2024-12-01", "2024-12-02", "2024-12-03", "2024-12-04", "2024-12-05",
+        "2024-12-06", "2024-12-07", "2024-12-08", "2024-12-09", "2024-12-10",
+        "2024-12-11", "2024-12-12", "2024-12-13", "2024-12-14", "2024-12-15"
+    ],
+    "Exceeding SLA": [4, 8, 5, 11, 6, 4, 10, 49, 40, 21, 13, 4, 1, 7, 3],
+    "Resolved Within SLA": [29, 47, 33, 30, 39, 19, 20, 4, 8, 13, 22, 32, 21, 36, 36],
+    "Total Complaints": [33, 55, 38, 41, 45, 23, 30, 53, 48, 34, 35, 36, 22, 43, 39],
+    "Efficiency Ratio": [
+        "87.88%", "85.45%", "86.84%", "73.17%", "86.67%",
+        "82.61%", "66.67%", "7.55%", "16.67%", "38.24%",
+        "62.86%", "88.89%", "95.45%", "83.72%", "92.31%"
+    ]
+}
+efficiency_df = pd.DataFrame(efficiency_data)
+
+
+st.markdown(
+    "<h1 style='text-align: center;'>Complaint Handling Analysis Dashboard</h1>",
+    unsafe_allow_html=True
+)
+st.write('')
+
+# Significant Outliers (Expanders by Brand)
+st.subheader("Complaints Exceeding SLA")
+for brand in df['The Brand name'].unique():
+    brand_outliers = significant_outliers[significant_outliers['The Brand name'] == brand]
+    if not brand_outliers.empty:
+        with st.expander(f"Complaints Exceeding SLA For: {brand}"):
+            st.dataframe(brand_outliers[['Date', 'Resolution Time (Days)', 'Priorty', 'Complaint Type', 'Comment about case']])
+
+st.write('---')
+
+# Efficiency Table
+st.subheader("Daily Efficiency Metrics")
+st.dataframe(efficiency_df)
+
+
+st.write('---')
+
+
+# Define the values for the metrics
+daily_capacity = 28
+threshold_overload_lower = 35
+threshold_overload_upper = 40
+
+# Display the metrics in a flexbox layout using HTML
+st.markdown(
+    """
+    <div style='display: flex; justify-content: center; flex-wrap: wrap;'>
+        <div style='text-align: center; margin: 10px;'>
+            <h3 style='color: limegreen;'>Daily Complaint Handling Capacity</h3>
+            <p style='font-size: 1.2em;'>Complaints: {}</p>
+        </div>
+        <div style='text-align: center; margin: 10px;'>
+            <h3 style='color: orange;'>Threshold for Overload</h3>
+            <p style='font-size: 1.2em;'>Complaints: {} - {}</p>
+        </div>
+    </div>
+    """.format(
+        daily_capacity,
+        threshold_overload_lower,
+        threshold_overload_upper
+    ),
+    unsafe_allow_html=True
+)
+
+# Summary Section
+st.subheader("Summary of Complaint Handling Analysis")
+summary = """
+1. **Daily Complaint Handling Capacity:** Approximately **28 complaints/day** can be handled efficiently within SLA.
+2. **Threshold for Overload:** When complaints exceed **35-40 per day**, SLA breaches increase significantly.
+3. **Cumulative SLA Breaches:** Complaints unresolved from previous days contribute to further SLA breaches.
+4. **Recommendation:** Allocate additional resources to handle peak complaint volumes to reduce backlog and SLA breaches.
+"""
+st.markdown(summary)
 
 st.write('---')
 
