@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
-import streamlit.components.v1 as components
+
 # Streamlit page configuration
 st.set_page_config(page_title="Complaints Analysis", layout="wide")
 
@@ -442,7 +442,7 @@ summary = """
 """
 st.markdown(summary)
 
-
+import streamlit.components.v1 as components
 # Embed the iframe
 iframe_code = """
 <iframe allowfullscreen="allowfullscreen" scrolling="no" class="fp-iframe" 
