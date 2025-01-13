@@ -439,7 +439,6 @@ summary = """
 2. **Threshold for Overload:** When complaints exceed **35-40 per day**, the system becomes overloaded, leading to an increase in complaints exceeding SLA.
 3. **Cumulative SLA Breaches:** Unresolved complaints from overloaded days result in backlog accumulation, which further increases SLA breaches in the following days.
 4. **Recommendation:** Increase resources or staffing during peak periods to handle ~40 complaints/day to prevent SLA breaches and backlog accumulation.
-Prioritize high-SLA complaints to mitigate the impact of delays.
 """
 st.markdown(summary)
 
