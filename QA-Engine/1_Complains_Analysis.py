@@ -398,49 +398,43 @@ for brand in df['The Brand name'].unique():
 
 st.write('---')
 
-# Efficiency Table
-st.subheader("Daily Efficiency Metrics")
-st.dataframe(efficiency_df)
+col1, col2 = st.columns(2)
+with col1:
+    st.subheader("Daily Efficiency Metrics")
+    st.dataframe(efficiency_df)
+with col2:
+    # Data for plotting
+    dates = ['2024-12-01', '2024-12-02', '2024-12-03', '2024-12-04', '2024-12-05', 
+             '2024-12-06', '2024-12-07', '2024-12-08', '2024-12-09', '2024-12-10', 
+             '2024-12-11', '2024-12-12', '2024-12-13', '2024-12-14', '2024-12-15']
+    exceeding_sla = [4, 8, 5, 11, 6, 4, 10, 49, 40, 21, 13, 4, 1, 7, 3]
 
+    # Create a DataFrame for plotting
+    data = pd.DataFrame({
+        'Date': dates,
+        'Exceeding SLA': exceeding_sla
+    })
+
+    # Create the Plotly scatter plot with 'x' markers
+    fig = px.scatter(data, x='Date', y='Exceeding SLA', title="Date vs Exceeding SLA", 
+                     labels={'Date': 'Date', 'Exceeding SLA': 'Exceeding SLA'},
+                     symbol_sequence=["x"])
+
+    # Update layout to ensure all dates are shown
+    fig.update_layout(
+        xaxis_title='Date',
+        yaxis_title='Exceeding SLA',
+        xaxis_tickangle=45,  # Rotate the x-axis labels for better readability
+        xaxis={'type': 'category'},  # Make the x-axis categorical to display all dates
+        template='plotly_dark'  # Optional: Use a dark theme
+    )
+
+    # Show the plot in Streamlit
+    st.plotly_chart(fig)
 
 st.write('---')
 
 
-# Define the values for the metrics
-daily_capacity = 28
-threshold_overload_lower = 35
-threshold_overload_upper = 40
-
-# Display the metrics in a flexbox layout using HTML
-st.markdown(
-    """
-    <div style='display: flex; justify-content: center; flex-wrap: wrap;'>
-        <div style='text-align: center; margin: 10px;'>
-            <h3 style='color: limegreen;'>Daily Complaint Handling Capacity</h3>
-            <p style='font-size: 1.2em;'>Complaints: {}</p>
-        </div>
-        <div style='text-align: center; margin: 10px;'>
-            <h3 style='color: orange;'>Threshold for Overload</h3>
-            <p style='font-size: 1.2em;'>Complaints: {} - {}</p>
-        </div>
-    </div>
-    """.format(
-        daily_capacity,
-        threshold_overload_lower,
-        threshold_overload_upper
-    ),
-    unsafe_allow_html=True
-)
-
-# Summary Section
-st.subheader("Summary of Complaint Handling Analysis")
-summary = """
-1. **Daily Complaint Handling Capacity:** Approximately **28 complaints/day** can be handled efficiently within SLA under normal circumstances.
-2. **Threshold for Overload:** When complaints exceed **35-40 per day**, the system becomes overloaded, leading to an increase in complaints exceeding SLA.
-3. **Cumulative SLA Breaches:** Unresolved complaints from overloaded days result in backlog accumulation, which further increases SLA breaches in the following days.
-4. **Recommendation:** Increase resources or staffing during peak periods to handle ~40 complaints/day to prevent SLA breaches and backlog accumulation.
-"""
-st.markdown(summary)
 
 import streamlit.components.v1 as components
 # Embed the iframe
