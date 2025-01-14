@@ -403,6 +403,9 @@ with col1:
     st.subheader("Daily Efficiency Metrics")
     st.dataframe(efficiency_df)
 with col2:
+    import streamlit as st
+    import plotly.express as px
+    import pandas as pd
     # Data for plotting
     dates = ['2024-12-01', '2024-12-02', '2024-12-03', '2024-12-04', '2024-12-05', 
              '2024-12-06', '2024-12-07', '2024-12-08', '2024-12-09', '2024-12-10', 
