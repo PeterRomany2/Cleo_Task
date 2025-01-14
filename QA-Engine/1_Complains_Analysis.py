@@ -595,5 +595,63 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True)
 
 
+# Grouping by Brand, Item, and Complaint Type to count complaints of each type per brand and item
+brand_complaints = df.groupby(['The Brand name', 'Items with issues', 'Complaint Type']).size().reset_index(
+    name='Number of Complaints')
+
+# Calculate the total complaints per brand and item (to calculate percentage)
+brand_item_total_complaints = brand_complaints.groupby(['The Brand name', 'Items with issues'])[
+    'Number of Complaints'].transform('sum')
+
+# Calculate the percentage for each complaint type based on the specific brand and item total complaints
+brand_complaints['Percentage'] = (brand_complaints['Number of Complaints'] / brand_item_total_complaints) * 100
+
+# Create a text column to display the complaint count and percentage
+brand_complaints['Text'] = brand_complaints.apply(
+    lambda row: f"{row['Number of Complaints']} ({row['Percentage']:.2f}%)", axis=1
+)
+
+# Sort the dataframe by 'Brand' first, and then by 'Number of Complaints' for each brand-item (descending order)
+brand_complaints = brand_complaints.sort_values(by=['The Brand name', 'Items with issues', 'Number of Complaints'],
+                                                ascending=[True, True, False])
+
+st.write("### Complaints by Brand, Item, and Reason")
+
+# Create an expander for each brand-item combination, showing one brand-item at a time
+unique_brands = brand_complaints['The Brand name'].unique()
+
+for brand in unique_brands:
+    with st.expander(f"View Complaints for {brand}"):
+        # Filter the data for the current brand
+        brand_data = brand_complaints[brand_complaints['The Brand name'] == brand]
+
+        # Total complaints for the current brand
+        total_complaints_brand = brand_data['Number of Complaints'].sum()
+        st.write(
+            f"<div style='text-align: center; font-size: 1.5em;'>Total Complaints for {brand}: <span style='color: limegreen; font-weight: bold;'>{total_complaints_brand}</span></div>",
+            unsafe_allow_html=True
+        )
+
+        # Create the stacked bar chart for the current brand
+        bar_fig = px.bar(
+            brand_data,
+            x='Items with issues',  # X-axis: Item names
+            y='Number of Complaints',  # Y-axis: Number of complaints
+            color='Complaint Type',  # Color by Complaint Type
+            text='Text',  # Display combined count and percentage
+            title=f"Complaints Breakdown for {brand}",
+        )
+
+        # Update layout and display options
+        bar_fig.update_traces(texttemplate='%{text}', textposition='outside')
+        bar_fig.update_layout(
+            yaxis_title="Number of Complaints",
+            xaxis_title="Item",
+            title_font_size=16,
+            showlegend=True  # Show legend for Complaint Types
+        )
+
+        # Display the chart
+        st.plotly_chart(bar_fig)
 
 
