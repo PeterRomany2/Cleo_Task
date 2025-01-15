@@ -14,7 +14,7 @@ if "logged_in" not in st.session_state or not st.session_state.logged_in:
 
 # Set up API Key for GROQ (load from config.json)
 
-GROQ_API_KEY = "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"
+GROQ_API_KEY = "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"
 
 # Set the API key as an environment variable for the session
 os.environ["GROQ_API_KEY"] = GROQ_API_KEY
